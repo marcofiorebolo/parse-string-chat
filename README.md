@@ -1,6 +1,7 @@
 # Parse String Chat
 
 Simple Kata exercise to parse strings and recognise chat sentences.
+All the input files are in the 'data' directory.
 
 # <a name="prerequisites"></a> Prerequisites
 

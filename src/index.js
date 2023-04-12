@@ -15,7 +15,7 @@ function main() {
     let buffer = "";
 
     for(let i = 0; i < files.length; i++) {
-        buffer = fs.readFileSync(`./data/Step${i+1}.txt`, 'utf8', (err, data) => {
+        buffer = fs.readFileSync(`./data/${files[i]}`, 'utf8', (err, data) => {
             if (err) throw err;
             console.log(data);
         });
