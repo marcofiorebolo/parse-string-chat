@@ -15,8 +15,6 @@ const TYPES = ['agent', 'customer'];
 
 class Parser {
     
-    completeRegex = new RegExp(COMPLETE_REGEX);
-
     constructor(completeRegex, lineRegex, types) {
         this.completeRegex = completeRegex ? completeRegex : new RegExp(COMPLETE_REGEX);
         this.lineRegex = lineRegex ? lineRegex : new RegExp(LINE_REGEX)

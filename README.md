@@ -212,4 +212,4 @@ The output should be
 Two kind of outputs:
 
 1. Console in the terminal from which you launched ```npm run start``` (an array per step is shown);
-2. One text file per step in the root directory.
+2. One text file per step in the 'output' directory.
