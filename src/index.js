@@ -13,11 +13,11 @@ const STEPS = [
 
 function main() {
     const parser = new Parser();
-    let info = "";
+    let result = "";
     for(let i = 0; i < STEPS.length; i++) {
-        info = parser.parseString(STEPS[i]);
+        result = parser.parseString(STEPS[i]);
         console.log(parser.parseString(STEPS[i]));
-        fs.writeFile(`Step${i+1}.txt`, JSON.stringify(info, ' ', 2), (err) => {
+        fs.writeFile(`Step${i+1}.txt`, JSON.stringify(result, ' ', 2), (err) => {
             if (err) throw err;
         });
     }

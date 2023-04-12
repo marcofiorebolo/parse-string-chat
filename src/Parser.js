@@ -1,63 +1,68 @@
 
 /**
- * Properties used in the regular expressions
+ * Final output will be an array of these objects
  * @typedef     {Object}    ChatStructure   "{date: "", mention: "", sentence: "", type: ""}"
+ * Properties used in the regular expressions
  * @property    {string}    date            "14:24:32"
  * @property    {string}    mention         "14:24:32 Customer : "
  * @property    {string}    sentence        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
  * @property    {string}    type            "customer"
- */
+*/
 
-const CHAT_REGEX = /(?<mention>(?<date>(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)) (?<type>Agent|Customer|[.' \w']+) (: )?)(?<sentence>(.*.\n?))/gm
-const PIECES_REGEX = /(?<mention>(?<date>(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)) [\w ]*:? ?)/g
-
+const COMPLETE_REGEX = /(?<mention>(?<date>(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)) (?<type>Agent|Customer|[.' \w]+) (: )?)(?<sentence>(.*.\n?))/gm
+const LINE_REGEX = /(?<mention>(?<date>(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)) [\w ]*:? ?)/g
 const TYPES = ['agent', 'customer'];
 
 class Parser {
     
-    constructor(mainRegex, piecesRegex, types) {
-        this.mainRegex = mainRegex ? mainRegex : new RegExp(CHAT_REGEX);
-        this.piecesRegex = piecesRegex ? piecesRegex : new RegExp(PIECES_REGEX)
-        this.types = types ? types : new Set(TYPES);
+    completeRegex = new RegExp(COMPLETE_REGEX);
+
+    constructor(completeRegex, lineRegex, types) {
+        this.completeRegex = completeRegex ? completeRegex : new RegExp(COMPLETE_REGEX);
+        this.lineRegex = lineRegex ? lineRegex : new RegExp(LINE_REGEX)
+        this.types = types ? new Set(types) : new Set(TYPES);
     }
     
-    getPieces(text) {
+    getLines(text) {
         let match = [];
-        const pieces = [];
+        const lines = [];
         let index = 0;
 
-        while (match = this.piecesRegex.exec(text)) {
-            const piece = text.substring(index, match.index);
+        while (match = this.lineRegex.exec(text)) {
+            const line = text.substring(index, match.index);
             index = match.index;
-            if (!piece.trim()) {
+            if (!line.trim()) {
                 continue;
             }
-            pieces.push(piece);
+            lines.push(line);
         }
-        pieces.push(text.substring(index, text.length));
-        return pieces;
+        lines.push(text.substring(index, text.length));
+        return lines;
     }
 
     /**
      * 
      * @param {string} stringChat 
      * @returns {ChatStructure[]}
-     */
+    */
     parseString(stringChat) {
         let match = [];
         const resList = [];
-        const pieces = this.getPieces(stringChat);
+        const lines = this.getLines(stringChat);
 
-        for (const piece of pieces) {
-            while(match = this.mainRegex.exec(piece)) {
+        let count = 0;
+        for (const line of lines) {
+            while(match = this.completeRegex.exec(line)) {
                 if(match.groups) {
                     resList.push({
                         date: match.groups.date,
                         mention: match.groups.mention,
                         sentence: match.groups.sentence,
-                        type: this.types.has((match.groups.type).toLowerCase()) ? (match.groups.type).toLowerCase() : match.groups.type
+                        type: this.types.has((match.groups.type).toLowerCase()) ? (match.groups.type).toLowerCase() : (count === 0 ? 'customer' : 'agent')
                     });
+                    count++;
                 }
+                
             }
         }
         return resList;

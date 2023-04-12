@@ -9,6 +9,7 @@ Simple Kata exercise to parse strings and recognise chat sentences.
 
 ## Launch
 Go to the root directory of this project (i.e. where this README is), open a terminal and type
+
 ```
 npm run start
 ```
@@ -18,4 +19,4 @@ npm run start
 Two kind of outputs:
 
 1. Console in the terminal from which you launched ```npm run start``` (an array per step is shown);
-2. You will find one text file per step in the root directory.
+2. One text file per step in the root directory.
